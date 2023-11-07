@@ -66,7 +66,7 @@
     function generateAndDisplayArray() {
       // Calculate the seed as the number of weeks since 1970/01/01
       const currentDate = new Date();
-      const startDate = new Date(1970, 0, 1); // January is month 0
+      const startDate = new Date(1970, 0, 4); // January is month 0
       const millisecondsPerWeek = 7 * 24 * 60 * 60 * 1000;
       const weeksSince1970 = Math.floor((currentDate - startDate) / millisecondsPerWeek);
       const week_seed = Math.floor(weeksSince1970 / 5)
@@ -76,7 +76,7 @@
       var nextweek_arr;
 
       // Get next week data
-      if (week_num == 5) {
+      if (week_num == 4) {
         nextweek_arr = generateNonMatchingArray(week_seed + 1)[0];
       } else {
         nextweek_arr = randomArray[week_num + 1];
