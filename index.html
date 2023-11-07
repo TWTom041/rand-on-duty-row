@@ -108,7 +108,7 @@
 
       const { currentMonday, currentFriday, nextMonday, nextFriday } = getMondayAndFridayDates();
 
-      const randomArray = generateNonMatchingArray(week_seed)[week_num];
+      var randomArray = generateNonMatchingArray(week_seed);
       var nextweek_arr;
 
       // Get next week data
@@ -117,10 +117,11 @@
       } else {
         nextweek_arr = randomArray[week_num + 1];
       }
+      randomArray = randomArray[week_num]
       
       curDay = currentDate.getDay() - 1;
       if (!(curDay == -1 || curDay == 5)) {
-        randomArray[curDay] = `<span style="color: #ff0000">${curDay}</span>`;
+        randomArray[curDay] = `<span style="color: #ff0000">${randomArray[curDay]}</span>`;
       }
       var resultText =  `${currentMonday}~${currentFriday}  ${randomArray.join(" ")}`;
       resultText += `\n${nextMonday}~${nextFriday}  <span style="opacity: 0.3">${nextweek_arr.join(" ")}</span>`
