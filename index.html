@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Random 5x5 Array Generator</title>
+</head>
+<body>
+  <h1>Random 5x5 Array Generator</h1>
+  <p>This page generates a 5x5 array of random digits between 1 and 5 with distinct digits in each row and column.</p>
+
+  <button id="generateArrayButton">Generate Array</button>
+  <pre id="result"></pre>
+
+  <script>
+    function seededRandom(seed) {
+      let value = seed % 2147483647;
+      return () => {
+        value = (value * 16807) % 2147483647;
+        return (value - 1) / 2147483646;
+      };
+    }
+
+    function generateNonMatchingArray(seed) {
+      const n = 5;
+      const maxNumber = 5;
+      const rng = seededRandom(seed); // Initialize the random number generator with the seed
+      const array = [];
+
+      // Initialize the 5x5 array with undefined values
+      for (let i = 0; i < n; i++) {
+        array.push(new Array(n).fill(undefined));
+      }
+
+      for (let row = 0; row < n; row++) {
+        for (let col = 0; col < n; col++) {
+          let availableDigits = [1, 2, 3, 4, 5];
+
+          // Remove digits already used in the current row
+          for (let c = 0; c < col; c++) {
+            const digit = array[row][c];
+            availableDigits = availableDigits.filter((d) => d !== digit);
+          }
+
+          // Remove digits already used in the current column
+          for (let r = 0; r < row; r++) {
+            const digit = array[r][col];
+            availableDigits = availableDigits.filter((d) => d !== digit);
+          }
+
+          if (availableDigits.length === 0) {
+            // No available digits, so we need to start over
+            row = 0; // Reset the row index to regenerate the current row
+            col = -1; // Reset the col index to regenerate the current row
+            array.forEach((row) => row.fill(undefined)); // Clear the current row
+          } else {
+            const randomIndex = Math.floor(rng() * availableDigits.length);
+            const randomDigit = availableDigits[randomIndex];
+            array[row][col] = randomDigit;
+          }
+        }
+      }
+
+      return array;
+    }
+
+    document.getElementById("generateArrayButton").addEventListener("click", function () {
+      // Calculate the seed as the number of weeks since 1970/01/01
+      const currentDate = new Date();
+      const startDate = new Date(1970, 0, 1); // January is month 0
+      const millisecondsPerWeek = 7 * 24 * 60 * 60 * 1000;
+      const weeksSince1970 = Math.floor((currentDate - startDate) / millisecondsPerWeek);
+      
+      const randomArray = generateNonMatchingArray(weeksSince1970);
+      const resultText = randomArray.map(row => row.join(" ")).join("\n");
+      document.getElementById("result").textContent = resultText;
+    });
+  </script>
+</body>
+</html>
