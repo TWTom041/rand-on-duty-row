@@ -77,11 +77,11 @@
 
       // Calculate the date for Monday of the next week
       const nextMondayDate = new Date(currentDate);
-      nextMondayDate.setDate(currentDate.getDate() + 7 - (today + 6) % 7);
+      nextMondayDate.setDate(currentDate.getDate() + 7 - (today + 6) % 7 + (today == 0 ? 7 : 0));
 
       // Calculate the date for Friday of the next week
       const nextFridayDate = new Date(currentDate);
-      nextFridayDate.setDate(currentDate.getDate() + 7 + (5 - today + 7) % 7 + (today == 0 ? 7 : 0));
+      nextFridayDate.setDate(currentDate.getDate() + 7 + (5 - today + 7) % 7);
 
       const formatDate = date => {
         const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
