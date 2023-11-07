@@ -86,7 +86,7 @@
       randomArray[curDay] = `<span style="color: #ff0000">${curDay}</span>`;
       var resultText = randomArray.join(" ");
       resultText += `\n<span style="color: #555555">${nextweek_arr.join(" ")}</span>`
-      document.getElementById("result").textContent = resultText;
+      document.getElementById("result").innerHTML = resultText;
     }
     
     function getCurrentDate() {
