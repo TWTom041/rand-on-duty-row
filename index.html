@@ -9,7 +9,7 @@
 
   <button id="generateArrayButton">Generate Array</button>
   <p id="currentDate"></p>
-  <p id="result"></p>
+  <pre id="result" style="font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;"></pre>
 
   <script>
     function seededRandom(seed) {
@@ -63,6 +63,40 @@
       return array;
     }
 
+    function getMondayAndFridayDates() {
+      const currentDate = new Date();
+      const today = currentDate.getDay(); // Get the day of the week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
+
+      // Calculate the date for Monday of the current week
+      const currentMondayDate = new Date(currentDate);
+      currentMondayDate.setDate(currentDate.getDate() - (today + 6) % 7);
+
+      // Calculate the date for Friday of the current week
+      const currentFridayDate = new Date(currentDate);
+      currentFridayDate.setDate(currentDate.getDate() + (5 - today + 7) % 7);
+
+      // Calculate the date for Monday of the next week
+      const nextMondayDate = new Date(currentDate);
+      nextMondayDate.setDate(currentDate.getDate() + 7 - (today + 6) % 7);
+
+      // Calculate the date for Friday of the next week
+      const nextFridayDate = new Date(currentDate);
+      nextFridayDate.setDate(currentDate.getDate() + 7 + (5 - today + 7) % 7);
+
+      const formatDate = date => {
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${month}/${day}`;
+      };
+
+      return {
+        currentMonday: formatDate(currentMondayDate),
+        currentFriday: formatDate(currentFridayDate),
+        nextMonday: formatDate(nextMondayDate),
+        nextFriday: formatDate(nextFridayDate),
+      };
+    }
+
     function generateAndDisplayArray() {
       // Calculate the seed as the number of weeks since 1970/01/01
       const currentDate = new Date();
@@ -71,6 +105,8 @@
       const weeksSince1970 = Math.floor((currentDate - startDate) / millisecondsPerWeek);
       const week_seed = Math.floor(weeksSince1970 / 5)
       const week_num = weeksSince1970 % 5
+
+      const { currentMonday, currentFriday, nextMonday, nextFriday } = getMondayAndFridayDates();
 
       const randomArray = generateNonMatchingArray(week_seed)[week_num];
       var nextweek_arr;
@@ -83,9 +119,11 @@
       }
       
       curDay = currentDate.getDay() - 1;
-      randomArray[curDay] = `<span style="color: #ff0000">${curDay}</span>`;
-      var resultText = randomArray.join(" ");
-      resultText += `\n<span style="color: #555555">${nextweek_arr.join(" ")}</span>`
+      if (!(curDay == -1 || curDay == 5)) {
+        randomArray[curDay] = `<span style="color: #ff0000">${curDay}</span>`;
+      }
+      var resultText =  `${currentMonday}~${currentFriday}  ${randomArray.join(" ")}`;
+      resultText += `\n${nextMonday}~${nextFriday}  <span style="opacity: 0.3">${nextweek_arr.join(" ")}</span>`
       document.getElementById("result").innerHTML = resultText;
     }
     
@@ -97,7 +135,7 @@
       const date = currentDate.getDate();
       const year = currentDate.getFullYear();
 
-      const formattedDate = `${year}/${month}/${date}, 星期${dayOfWeek}`;
+      const formattedDate = `${year}/${month + 1}/${date}, 星期${dayOfWeek}`;
       return formattedDate;
     }
 
