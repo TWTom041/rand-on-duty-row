@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Random 5x5 Array Generator</title>
+  <title>值日生決定器</title>
 </head>
 <body>
-  <h1>Random 5x5 Array Generator</h1>
-  <p>This page generates a 5x5 array of random digits between 1 and 5 with distinct digits in each row and column.</p>
+  <h1>公正、公開、有效的值日生是第幾排生成器</h1>
+  <p>每周每排都會輪到一次、每排每5周都會輪到一次星期一到五</p>
 
   <button id="generateArrayButton">Generate Array</button>
+  <p id="currentDate"></p>
   <pre id="result"></pre>
 
   <script>
@@ -70,10 +71,33 @@
       const weeksSince1970 = Math.floor((currentDate - startDate) / millisecondsPerWeek);
       const week_seed = Math.floor(weeksSince1970 / 5)
       const week_num = weeksSince1970 % 5
-      
+
       const randomArray = generateNonMatchingArray(week_seed)[week_num];
+
+      // Get next week data
+      if (week_num == 5) {
+        const nextweek_arr = generateNonMatchingArray(week_seed + 1)[0];
+      } else {
+        const nextweek_arr = randomArray[week_num + 1];
+      }
+      
+      curDay = currentDate.getDay() - 1;
+      randomArray[curDay] = `<span style="color: #ff0000">${curDay}</span>`;
       const resultText = randomArray.join(" ");
+      resultText += `\n<span style="color: #555555">${nextweek_arr.join(" ")}</span>`
       document.getElementById("result").textContent = resultText;
+    }
+    
+    function getCurrentDate() {
+      const currentDate = new Date();
+      
+      const dayOfWeek = currentDate.getDay();
+      const month = currentDate.getMonth();
+      const date = currentDate.getDate();
+      const year = currentDate.getFullYear();
+
+      const formattedDate = `${year}/${month}/${date}, 星期${dayOfWeek}`;
+      return formattedDate;
     }
 
     // Generate and display the array when the page loads
@@ -81,6 +105,9 @@
 
     // Also, allow generating the array on button click
     document.getElementById("generateArrayButton").addEventListener("click", generateAndDisplayArray);
+    
+    const currentDateElement = document.getElementById("currentDate");
+    currentDateElement.textContent = getCurrentDate();
   </script>
 </body>
 </html>
