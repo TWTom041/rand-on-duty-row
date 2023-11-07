@@ -73,12 +73,13 @@
       const week_num = weeksSince1970 % 5
 
       const randomArray = generateNonMatchingArray(week_seed)[week_num];
+      var nextweek_arr;
 
       // Get next week data
       if (week_num == 5) {
-        const nextweek_arr = generateNonMatchingArray(week_seed + 1)[0];
+        nextweek_arr = generateNonMatchingArray(week_seed + 1)[0];
       } else {
-        const nextweek_arr = randomArray[week_num + 1];
+        nextweek_arr = randomArray[week_num + 1];
       }
       
       curDay = currentDate.getDay() - 1;
