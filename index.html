@@ -84,7 +84,7 @@
       
       curDay = currentDate.getDay() - 1;
       randomArray[curDay] = `<span style="color: #ff0000">${curDay}</span>`;
-      const resultText = randomArray.join(" ");
+      var resultText = randomArray.join(" ");
       resultText += `\n<span style="color: #555555">${nextweek_arr.join(" ")}</span>`
       document.getElementById("result").textContent = resultText;
     }
