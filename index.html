@@ -2,14 +2,38 @@
 <html>
 <head>
   <title>值日生決定器</title>
+  <style>
+    body{
+      text-align: center;
+      font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
+      font-size: 14px;
+      line-height: 1.5;
+      color: #333;
+      background-color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+
+    table{
+      margin-left: auto;
+      margin-right: auto;
+      border-collapse: collapse;
+      border-spacing: 0;
+    }
+    th, td{
+      padding: 10px 20px;
+      border: 0.1px solid #000;
+    }
+  </style>
 </head>
 <body>
-  <h1>公正、公開、有效的值日生是第幾排生成器</h1>
+  <h1><span style="font-size: 40px;">公正、公開、有效</span>的值日生是第幾排生成器</h1>
   <p>每周每排都會輪到一次、每排每5周都會輪到一次星期一到五</p>
 
   <p id="currentDate"></p>
-  <pre id="result" style="font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;"></pre>
-  <button id="generateArrayButton">Regenerate</button>
+  <table id="result"></table>
+  <br>
+  <button id="generateArrayButton">Refresh</button>
 
   <script>
     function seededRandom(seed) {
@@ -118,13 +142,15 @@
         nextweek_arr = randomArray[week_num + 1];
       }
       randomArray = randomArray[week_num]
-      
+      var xingchi = ["一", "二", "三", "四", "五"];
       curDay = currentDate.getDay() - 1;
       if (!(curDay == -1 || curDay == 5)) {
         randomArray[curDay] = `<span style="color: #ff0000">${randomArray[curDay]}</span>`;
+        xingchi[curDay] = `<span style="color: #ff0000">${xingchi[curDay]}</span>`;
       }
-      var resultText =  `${currentMonday}~${currentFriday}  ${randomArray.join(" ")}`;
-      resultText += `\n${nextMonday}~${nextFriday}  <span style="opacity: 0.3">${nextweek_arr.join(" ")}</span>`
+      
+      var resultText =  `<thead><tr><th>日期</th><th>${xingchi.join("</th><th>")}</th></tr></thead><tbody><tr><td>${currentMonday}~${currentFriday}</td> <td>${randomArray.join("</td><td>")}</td></tr>`;
+      resultText += `\n<tr style="opacity: 0.3"><td>${nextMonday}~${nextFriday}</td> <td>${nextweek_arr.join("</td><td>")}</td></tr></tbody>`
       document.getElementById("result").innerHTML = resultText;
     }
     
@@ -135,8 +161,9 @@
       const month = currentDate.getMonth();
       const date = currentDate.getDate();
       const year = currentDate.getFullYear();
+      const xingchi = ["一", "二", "三", "四", "五", "六", "日"];
 
-      const formattedDate = `${year}/${month + 1}/${date}, 星期${dayOfWeek}`;
+      const formattedDate = `${year}/${month + 1}/${date}\t星期${xingchi[(dayOfWeek%7)-1]}`;
       return formattedDate;
     }
 
