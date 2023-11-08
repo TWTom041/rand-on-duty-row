@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>值日生決定器</title>
   <style>
     body{
@@ -23,6 +24,18 @@
     th, td{
       padding: 10px 20px;
       border: 0.1px solid #000;
+    }
+
+    @media (max-width: 600px) {
+    body {
+      font-size: 12px; /* 调整字体大小 */
+    }
+    table {
+      width: 100%; /* 让表格充满屏幕宽度 */
+    }
+    th, td {
+      padding: 5px 10px; /* 减少单元格内边距 */
+    }
     }
   </style>
 </head>
