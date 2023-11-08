@@ -24,18 +24,19 @@
     th, td{
       padding: 10px 20px;
       border: 0.1px solid #000;
+      font-size: 20px;
     }
 
     @media (max-width: 600px) {
-    body {
-      font-size: 12px; /* 调整字体大小 */
-    }
-    table {
-      width: 100%; /* 让表格充满屏幕宽度 */
-    }
-    th, td {
-      padding: 5px 10px; /* 减少单元格内边距 */
-    }
+      body {
+        font-size: 12px;
+      }
+      table {
+        width: 100%;
+      }
+      th, td {
+        padding: 5px 10px;
+      }
     }
   </style>
 </head>
@@ -180,8 +181,15 @@
       return formattedDate;
     }
     var count = 0;
+    var timenow = Date.now();
     const countClick = () => {
-      count += 1;
+      if (Date.now() - timenow < 1000 * 10) {
+        count += 1;
+      } else {
+        count = 0;
+        return
+      }
+      timenow = Date.now();
       if (count >= 3) {
         window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
       }
