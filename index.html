@@ -33,7 +33,7 @@
   <p id="currentDate"></p>
   <table id="result"></table>
   <br>
-  <button id="generateArrayButton">Refresh</button>
+  <button id="generateArrayButton" onclick="countClick()">Refresh</button>
 
   <script>
     function seededRandom(seed) {
@@ -165,6 +165,13 @@
 
       const formattedDate = `${year}/${month + 1}/${date}\t星期${xingchi[(dayOfWeek%7)-1]}`;
       return formattedDate;
+    }
+    var count = 0;
+    const countClick = () => {
+      count += 1;
+      if (count >= 3) {
+        window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+      }
     }
 
     // Generate and display the array when the page loads
