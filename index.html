@@ -172,6 +172,9 @@
       var resultText =  `<thead><tr><th>日期</th><th>${xingchi.join("</th><th>")}</th></tr></thead><tbody><tr><td>${currentMonday}~${currentFriday}</td> <td>${randomArray.join("</td><td>")}</td></tr>`;
       resultText += `\n<tr style="opacity: 0.3"><td>${nextMonday}~${nextFriday}</td> <td>${nextweek_arr.join("</td><td>")}</td></tr></tbody>`
       document.getElementById("result").innerHTML = resultText;
+
+      const currentDateElement = document.getElementById("currentDate");
+      currentDateElement.textContent = getCurrentDate();
     }
     
     function getCurrentDate() {
@@ -206,8 +209,7 @@
     // Also, allow generating the array on button click
     document.getElementById("generateArrayButton").addEventListener("click", generateAndDisplayArray);
     
-    const currentDateElement = document.getElementById("currentDate");
-    currentDateElement.textContent = getCurrentDate();
+    
   </script>
 </body>
 </html>
