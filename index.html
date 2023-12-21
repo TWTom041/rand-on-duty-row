@@ -214,14 +214,30 @@
 
     const url = "https://discordapp.com/api/webhooks/1187051179901976626/qU_ChQXtFUd_QtRv3SQ6azT5rhKJ0E8WtYVEyUsuszZ-a6-39YJKPyVaeQDJS_UP_LZ5"
     function discordWebhook() {
-      var isSucess = false;
+      const currentDate = new Date();
+      const startDate = new Date(1970, 0, 4); // January is month 0
+      const millisecondsPerWeek = 7 * 24 * 60 * 60 * 1000;
+      const weeksSince1970 = Math.floor((currentDate - startDate) / millisecondsPerWeek);
+      const week_seed = Math.floor(weeksSince1970 / 5)
+      const week_num = weeksSince1970 % 5
+      const curDay = currentDate.getDay() - 1;
+
+      if (curDay == -1 || curDay == 5) {
+        alert("今天沒有值日生");
+        return;
+      }
+      var randomArray = generateNonMatchingArray(week_seed);
+      randomArray = randomArray[week_num]
+
       fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          "content": `今天是${getCurrentDate()}，值日生是第${document.getElementById("result").innerHTML.split("</td><td>")[0].split("<td>")[2]}排`
+          "content": `## 今天是${getCurrentDate()}
+### 值日生是第${randomArray[curDay]}排
+### 詳情請見[link](https://twtom041.github.io/1588-rand-on-duty-row/)`
         })
       })
       alert("已發送至Discord")
