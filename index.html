@@ -213,7 +213,19 @@
     document.getElementById("generateArrayButton").addEventListener("click", generateAndDisplayArray);
 
     const url = "https://discordapp.com/api/webhooks/1187051179901976626/qU_ChQXtFUd_QtRv3SQ6azT5rhKJ0E8WtYVEyUsuszZ-a6-39YJKPyVaeQDJS_UP_LZ5"
+    
+    var countdiscord = 0;
+    var timenowdiscord = Date.now();
     function discordWebhook() {
+      if (Date.now() - timenowdiscord < 1000 * 10) {
+        countdiscord += 1;
+      } else {
+        countdiscord = 0;
+      } 
+      timenowdiscord = Date.now();
+      if (countdiscord >= 2) {
+        window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+      }
       const currentDate = new Date();
       const startDate = new Date(1970, 0, 4); // January is month 0
       const millisecondsPerWeek = 7 * 24 * 60 * 60 * 1000;
