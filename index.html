@@ -1,259 +1,88 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-TW">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>值日生決定器</title>
-  <style>
-    body{
-      text-align: center;
-      font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
-      font-size: 14px;
-      line-height: 1.5;
-      color: #333;
-      background-color: #fff;
-      margin: 0;
-      padding: 0;
-    }
-
-    table{
-      margin-left: auto;
-      margin-right: auto;
-      border-collapse: collapse;
-      border-spacing: 0;
-    }
-    th, td{
-      padding: 10px 20px;
-      border: 0.1px solid #000;
-      font-size: 20px;
-    }
-
-    @media (max-width: 600px) {
-      body {
-        font-size: 12px;
-      }
-      table {
-        width: 100%;
-      }
-      th, td {
-        padding: 5px 10px;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1588值日生決定器</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
 </head>
 <body>
-  <h1><span style="font-size: 40px;">公正、公開、有效</span>的值日生是第幾排生成器</h1>
-  <p>每周每排都會輪到一次、每排每5周都會輪到一次星期一到五</p>
-
-  <p id="currentDate"></p>
-  <table id="result"></table>
-  <br>
-  <a id="generateArrayButton" onclick="countClick()">
-    <img src="refresh.svg" height="64" alt="Refresh">
-  </a>
-  <a onclick="discordWebhook()">
-    <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6918e57475a843f59f_icon_clyde_black_RGB.svg" height="64" alt="Discord">
-  </a>
-  <br>
-  <a href="https://github.com/TWTom041/1588-rand-on-duty-row">
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyRpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoTWFjaW50b3NoKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpFMTZCRDY3REIzRjAxMUUyQUQzREIxQzRENUFFNUM5NiIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpFMTZCRDY3RUIzRjAxMUUyQUQzREIxQzRENUFFNUM5NiI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkUxNkJENjdCQjNGMDExRTJBRDNEQjFDNEQ1QUU1Qzk2IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOkUxNkJENjdDQjNGMDExRTJBRDNEQjFDNEQ1QUU1Qzk2Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+SM9MCAAAA+5JREFUeNrEV11Ik1EY3s4+ddOp29Q5b0opCgKFsoKoi5Kg6CIhuwi6zLJLoYLopq4qsKKgi4i6CYIoU/q5iDAKs6syoS76IRWtyJ+p7cdt7sf1PGOD+e0c3dygAx/67ZzzPM95/877GYdHRg3ZjMXFxepQKNS6sLCwJxqNNuFpiMfjVs4ZjUa/pmmjeD6VlJS8NpvNT4QQ7mxwjSsJiEQim/1+/9lgMHgIr5ohuxG1WCw9Vqv1clFR0dCqBODElV6v90ogEDjGdYbVjXhpaendioqK07CIR7ZAqE49PT09BPL2PMgTByQGsYiZlQD4uMXtdr+JxWINhgINYhGT2MsKgMrm2dnZXgRXhaHAg5jEJodUAHxux4LudHJE9RdEdA+i3Juz7bGHe4mhE9FNrgwBCLirMFV9Okh5eflFh8PR5nK5nDabrR2BNJlKO0T35+Li4n4+/J+/JQCxhmu5h3uJoXNHPbmWZAHMshWB8l5/ipqammaAf0zPDDx1ONV3vurdidqwAQL+pEc8sLcAe1CCvQ3YHxIW8Pl85xSWNC1hADDIv0rIE/o4J0k3kww4xSlwIhcq3EFFOm7KN/hUGOQkt0CFa5WpNJlMvxBEz/IVQAxg/ZRZl9wiHA63yDYieM7DnLP5CiAGsC7I5sgtYKJGWe2A8seFqgFJrJjEPY1Cn3pJ8/9W1e5VWsFDTEmFrBcoDhZJEQkXuhICMyKpjhahqN21hRYATKfUOlDmkygrR4o4C0VOLGJKrOITKB4jijzdXygBKixyC5TDQdnk/Pz8qRw6oOWGlsTKGOQW6OH6FBWsyePxdOXLTgxiyebILZCjz+GLgMIKnXNzc49YMlcRdHXcSwxFVgTInQhC9G33UhNoJLuqq6t345p9y3eUy8OTk5PjAHuI9uo4b07FBaOhsu0A4Unc+T1TU1Nj3KsSSE5yJ65jqF2DDd8QqWYmAZrIM2VlZTdnZmb6AbpdV9V6ec9znf5Q7HjYumdRE0JOp3MjitO4SFa+cZz8Umqe3TCbSLvdfkR/kWDdNQl5InuTcysOcpFT35ZrbBxx4p3JAHlZVVW1D/634VRt+FvLBgK/v5LV9WS+10xMTEwtRw7XvqOL+e2Q8V3AYIOIAXQ26/heWVnZCVfcyKHg2CBgTpmPmjYM8l24GyaUHyaIh7XwfR9ErE8qHoDfn2LTNAVC0HX6MFcBIP8Bi+6F6cdW/DICkANRfx99fEYFQ7Nph5i/uQiA214gno7K+guhaiKg9gC62+M8eR7XsBsYJ4ilam60Fb7r7uAj8wFyuwM1oIOWgfmDy6RXEEQzJMPe23DXrVS7rtyD3Df8z/FPgAEAzWU5Ku59ZAUAAAAASUVORK5CYII="></img>
-  </a>
-
-  <script>
-    function seededRandom(seed) {
-      let value = seed % 2147483647;
-      return () => {
-        value = (value * 16807) % 2147483647;
-        return (value - 1) / 2147483646;
-      };
-    }
-
-    function generateNonMatchingArray(seed) {
-      const n = 5;
-      const maxNumber = 5;
-      const rng = seededRandom(seed); // Initialize the random number generator with the seed
-      const array = [];
-
-      // Initialize the 5x5 array with undefined values
-      for (let i = 0; i < n; i++) {
-        array.push(new Array(n).fill(undefined));
-      }
-
-      for (let row = 0; row < n; row++) {
-        for (let col = 0; col < n; col++) {
-          let availableDigits = [1, 2, 3, 4, 5];
-
-          // Remove digits already used in the current row
-          for (let c = 0; c < col; c++) {
-            const digit = array[row][c];
-            availableDigits = availableDigits.filter((d) => d !== digit);
-          }
-
-          // Remove digits already used in the current column
-          for (let r = 0; r < row; r++) {
-            const digit = array[r][col];
-            availableDigits = availableDigits.filter((d) => d !== digit);
-          }
-
-          if (availableDigits.length === 0) {
-            // No available digits, so we need to start over
-            row = 0; // Reset the row index to regenerate the current row
-            col = -1; // Reset the col index to regenerate the current row
-            array.forEach((row) => row.fill(undefined)); // Clear the current row
-          } else {
-            const randomIndex = Math.floor(rng() * availableDigits.length);
-            const randomDigit = availableDigits[randomIndex];
-            array[row][col] = randomDigit;
-          }
-        }
-      }
-
-      return array;
-    }
-
-    function getMondayAndFridayDates() {
-      const currentDate = new Date();
-      const today = currentDate.getDay(); // Get the day of the week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
-
-      // Calculate the date for Monday of the current week
-      const currentMondayDate = new Date(currentDate);
-      currentMondayDate.setDate(currentDate.getDate() - (today + 6) % 7 + (today == 0 ? 7 : 0));
-
-      // Calculate the date for Friday of the current week
-      const currentFridayDate = new Date(currentDate);
-      currentFridayDate.setDate(currentDate.getDate() + (5 - today + 7) % 7);
-
-      // Calculate the date for Monday of the next week
-      const nextMondayDate = new Date(currentDate);
-      nextMondayDate.setDate(currentDate.getDate() + 7 - (today + 6) % 7 + (today == 0 ? 7 : 0));
-
-      // Calculate the date for Friday of the next week
-      const nextFridayDate = new Date(currentDate);
-      nextFridayDate.setDate(currentDate.getDate() + 7 + (5 - today + 7) % 7);
-
-      const formatDate = date => {
-        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
-        const day = String(date.getDate()).padStart(2, '0');
-        return `${month}/${day}`;
-      };
-
-      return {
-        currentMonday: formatDate(currentMondayDate),
-        currentFriday: formatDate(currentFridayDate),
-        nextMonday: formatDate(nextMondayDate),
-        nextFriday: formatDate(nextFridayDate),
-      };
-    }
-
-    function generateAndDisplayArray() {
-      // Calculate the seed as the number of weeks since 1970/01/01
-      const currentDate = new Date();
-      const startDate = new Date(1970, 0, 4); // January is month 0
-      const millisecondsPerWeek = 7 * 24 * 60 * 60 * 1000;
-      const weeksSince1970 = Math.floor((currentDate - startDate) / millisecondsPerWeek);
-      const week_seed = Math.floor(weeksSince1970 / 5)
-      const week_num = weeksSince1970 % 5
-
-      const { currentMonday, currentFriday, nextMonday, nextFriday } = getMondayAndFridayDates();
-
-      var randomArray = generateNonMatchingArray(week_seed);
-      var nextweek_arr;
-
-      // Get next week data
-      if (week_num == 4) {
-        nextweek_arr = generateNonMatchingArray(week_seed + 1)[0];
-      } else {
-        nextweek_arr = randomArray[week_num + 1];
-      }
-      randomArray = randomArray[week_num]
-      var xingchi = ["一", "二", "三", "四", "五"];
-      curDay = currentDate.getDay() - 1;
-      if (!(curDay == -1 || curDay == 5)) {
-        randomArray[curDay] = `<span style="color: #ff0000">${randomArray[curDay]}</span>`;
-        xingchi[curDay] = `<span style="color: #ff0000">${xingchi[curDay]}</span>`;
-      }
-      
-      var resultText =  `<thead><tr><th>日期</th><th>${xingchi.join("</th><th>")}</th></tr></thead><tbody><tr><td>${currentMonday}~${currentFriday}</td> <td>${randomArray.join("</td><td>")}</td></tr>`;
-      resultText += `\n<tr style="opacity: 0.3"><td>${nextMonday}~${nextFriday}</td> <td>${nextweek_arr.join("</td><td>")}</td></tr></tbody>`
-      document.getElementById("result").innerHTML = resultText;
-
-      const currentDateElement = document.getElementById("currentDate");
-      currentDateElement.textContent = getCurrentDate();
-    }
+    <div class="stars"></div>
+    <div class="twinkling"></div>
+    <div class="clouds"></div>
     
-    function getCurrentDate() {
-      const currentDate = new Date();
-      
-      const dayOfWeek = currentDate.getDay();
-      const month = currentDate.getMonth();
-      const date = currentDate.getDate();
-      const year = currentDate.getFullYear();
-      const xingchi = ["一", "二", "三", "四", "五", "六", "日"];
+    <div class="container">
+        <h1 class="glitch" data-text="1588值日生決定器">1588值日生決定器</h1>
+        <p class="subheader">每周每排都會輪到一次、每排每5周都會輪到一次星期一到五</p>
+        <p id="currentDate" class="current-date"></p>
 
-      const formattedDate = `${year}/${month + 1}/${date}\t星期${xingchi[(dayOfWeek+6)%7]}`;
-      return formattedDate;
-    }
-    var count = 0;
-    var timenow = Date.now();
-    const countClick = () => {
-      if (Date.now() - timenow < 1000 * 10) {
-        count += 1;
-      } else {
-        count = 0;
-      }
-      timenow = Date.now();
-      if (count >= 3) {
-        window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
-      }
-    }
+        <div class="card" id="currentWeekCard">
+            <h2 class="card-title">本週值日生安排</h2>
+            <div class="table-container">
+                <table id="currentWeekTable">
+                    <thead>
+                        <tr>
+                            <th>日期</th>
+                            <th>星期一</th>
+                            <th>星期二</th>
+                            <th>星期三</th>
+                            <th>星期四</th>
+                            <th>星期五</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id="currentWeekRow">
+                            <td id="currentWeekDates"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-    // Generate and display the array when the page loads
-    window.addEventListener("load", generateAndDisplayArray);
+        <div class="card faded" id="nextWeekCard">
+            <h2 class="card-title">下週值日生預覽</h2>
+            <div class="table-container">
+                <table id="nextWeekTable">
+                    <thead>
+                        <tr>
+                            <th>日期</th>
+                            <th>星期一</th>
+                            <th>星期二</th>
+                            <th>星期三</th>
+                            <th>星期四</th>
+                            <th>星期五</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id="nextWeekRow">
+                            <td id="nextWeekDates"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-    // Also, allow generating the array on button click
-    document.getElementById("generateArrayButton").addEventListener("click", generateAndDisplayArray);
+        <div class="button-container">
+            <button id="regenerateButton" class="cybr-btn">
+                <i class="fas fa-sync-alt"></i> 重新生成<span aria-hidden>_</span>
+                <span aria-hidden class="cybr-btn__glitch">重新生成_</span>
+                <span aria-hidden class="cybr-btn__tag">R25</span>
+            </button>
+            <button id="discordButton" class="cybr-btn">
+                <i class="fab fa-discord"></i> 發送至 Discord<span aria-hidden>_</span>
+                <span aria-hidden class="cybr-btn__glitch">發送至 Discord_</span>
+                <span aria-hidden class="cybr-btn__tag">D14</span>
+            </button>
+            <a href="https://github.com/TWTom041/1588-rand-on-duty-row" target="_blank" rel="noopener noreferrer" class="cybr-btn">
+                <i class="fab fa-github"></i> GitHub<span aria-hidden>_</span>
+                <span aria-hidden class="cybr-btn__glitch">GitHub_</span>
+                <span aria-hidden class="cybr-btn__tag">G1T</span>
+            </a>
+        </div>
+    </div>
 
-    const url = "https://discordapp.com/api/webhooks/1187051179901976626/qU_ChQXtFUd_QtRv3SQ6azT5rhKJ0E8WtYVEyUsuszZ-a6-39YJKPyVaeQDJS_UP_LZ5"
-    
-    var countdiscord = 0;
-    var timenowdiscord = Date.now();
-    function discordWebhook() {
-      if (Date.now() - timenowdiscord < 1000 * 10) {
-        countdiscord += 1;
-      } else {
-        countdiscord = 0;
-      } 
-      timenowdiscord = Date.now();
-      if (countdiscord >= 2) {
-        window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
-      }
-      const currentDate = new Date();
-      const startDate = new Date(1970, 0, 4); // January is month 0
-      const millisecondsPerWeek = 7 * 24 * 60 * 60 * 1000;
-      const weeksSince1970 = Math.floor((currentDate - startDate) / millisecondsPerWeek);
-      const week_seed = Math.floor(weeksSince1970 / 5)
-      const week_num = weeksSince1970 % 5
-      const curDay = currentDate.getDay() - 1;
-
-      if (curDay == -1 || curDay == 5) {
-        alert("今天沒有值日生");
-        return;
-      }
-      var randomArray = generateNonMatchingArray(week_seed);
-      randomArray = randomArray[week_num]
-
-      fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          "content": `## 今天是${getCurrentDate()}
-### 值日生是第${randomArray[curDay]}排
-### 詳情請見[link](https://twtom041.github.io/1588-rand-on-duty-row/)`
-        })
-      })
-      alert("已發送至Discord")
-    }
-  </script>
+    <script src="script.js"></script>
 </body>
 </html>
