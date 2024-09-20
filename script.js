@@ -134,10 +134,41 @@ function getCurrentDate() {
 }
 
 function discordAlert() {
-    alert('Discord功能尚未實現，但很快就會來了！');
-}
+    const url = "https://discordapp.com/api/webhooks/1187051179901976626/qU_ChQXtFUd_QtRv3SQ6azT5rhKJ0E8WtYVEyUsuszZ-a6-39YJKPyVaeQDJS_UP_LZ5";
+    const currentDate = new Date();
+    const dayOfWeek = currentDate.getDay();
+    
+    if (dayOfWeek === 0 || dayOfWeek === 6) {
+        alert("今天是週末，沒有值日生。");
+        return;
+    }
 
-// ... (previous JavaScript content) ...
+    const currentWeekRow = document.getElementById('currentWeekRow');
+    const dutyNumber = currentWeekRow.cells[dayOfWeek].textContent;
+
+    const message = `## 今天是${getCurrentDate()}
+### 值日生是第${dutyNumber}排
+### 詳情請見[link](https://twtom041.github.io/1588-rand-on-duty-row/)
+
+### 1588值日生機器人 更新為v1.1.0`;
+
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 204 || xhr.status === 200) {
+                alert("已成功發送至Discord！");
+            } else {
+                alert("發送失敗，請稍後再試。");
+            }
+        }
+    };
+    xhr.send(JSON.stringify({
+        content: message,
+        username: "1588值日生機器人"
+    }));
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     generateDutyRoster();
