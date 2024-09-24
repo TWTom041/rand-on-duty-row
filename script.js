@@ -133,7 +133,7 @@ function getCurrentDate() {
     return `${year}/${month + 1}/${date} 星期${xingchi[(dayOfWeek + 6) % 7]}`;
 }
 
-function discordAlert() {
+async function discordAlert() {
     const url = "https://discordapp.com/api/webhooks/1187051179901976626/qU_ChQXtFUd_QtRv3SQ6azT5rhKJ0E8WtYVEyUsuszZ-a6-39YJKPyVaeQDJS_UP_LZ5";
     const currentDate = new Date();
     const dayOfWeek = currentDate.getDay();
@@ -146,11 +146,51 @@ function discordAlert() {
     const currentWeekRow = document.getElementById('currentWeekRow');
     const dutyNumber = currentWeekRow.cells[dayOfWeek].textContent;
 
-    const message = `## 今天是${getCurrentDate()}
+    let memes;
+    try {
+        const memeResponse = await fetch('https://memes.tw/wtf/api');
+        memes = await memeResponse.json();
+    } catch (error) {
+        console.error('Error fetching memes:', error);
+        alert('無法獲取迷因圖片，將發送沒有迷因的消息。');
+    }
+
+    let selectedMeme;
+    if (memes && memes.length > 0) {
+        const totalWeight = memes.reduce((sum, meme) => sum + meme.pageview + meme.total_like_count, 0);
+        let randomWeight = Math.random() * totalWeight;
+        
+        for (let meme of memes) {
+            randomWeight -= (meme.pageview + meme.total_like_count);
+            if (randomWeight <= 0) {
+                selectedMeme = meme;
+                break;
+            }
+        }
+    }
+
+    const message = {
+        content: `## 今天是${getCurrentDate()}
 ### 值日生是第${dutyNumber}排
 ### 詳情請見[link](https://twtom041.github.io/1588-rand-on-duty-row/)
 
-### 1588值日生機器人 更新為v1.1.0`;
+### 1588值日生機器人 更新為v1.2.1`,
+        username: "1588值日生機器人",
+        embeds: []
+    };
+
+    if (selectedMeme) {
+        message.embeds.push({
+            title: selectedMeme.title,
+            url: selectedMeme.url,
+            image: {
+                url: selectedMeme.src
+            },
+            footer: {
+                text: `作者: ${selectedMeme.author.name} | 按讚: ${selectedMeme.total_like_count} | 瀏覽: ${selectedMeme.pageview} | 標籤: ${selectedMeme.hashtag}`
+            }
+        });
+    }
 
     const xhr = new XMLHttpRequest();
     xhr.open("POST", url, true);
@@ -164,10 +204,7 @@ function discordAlert() {
             }
         }
     };
-    xhr.send(JSON.stringify({
-        content: message,
-        username: "1588值日生機器人"
-    }));
+    xhr.send(JSON.stringify(message));
 }
 
 document.addEventListener('DOMContentLoaded', () => {
